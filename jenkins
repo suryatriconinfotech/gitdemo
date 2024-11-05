@@ -1,22 +1,30 @@
 pipeline {
     agent any
+    tools{
+        jdk 'jdk21'
+        maven 'maven'
+    }
     stages {
-        stage('Build') {
-            steps {
-                echo 'Building...'
+        stage('Git Clone'){
+            steps{
+           git branch: 'master', changelog: false, poll: false, url: 'https://github.com/suryatriconinfotech/JWT-Demo.git'
             }
         }
-        stage('Test') {
-            steps {
-                echo 'Testing...'
-                // Here, include commands to run your test files, e.g., `npm test` or `pytest`
+        stage('Compile'){
+            steps{
+                bat "mvn clean compile"
             }
         }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying...'
+        stage('Build'){
+            steps{
+                bat "mvn clean install"
+            }
+        }
+          stage('Test'){
+            steps{
+                echo "Testing..."
             }
         }
     }
+   
 }
-
